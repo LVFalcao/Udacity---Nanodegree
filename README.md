@@ -9,4 +9,8 @@ The repository will have one folder per module:
  - Spark and Data Lakes
  - Automate Data Pipelines
 
+and each folder will contain more folders with with the following structure
+   - Exercises
+   - Project<number> - <name>
+
 
