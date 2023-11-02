@@ -4,7 +4,7 @@ During the **Data Engineering with AWS** course of the Nanodegree, https://learn
 
 
 The repository will have one folder per module:
- - (Data Modeling)[https://github.com/LVFalcao/data_engineering_with_aws/tree/main/Data%20Modeling]
+ - [Data Modeling](https://github.com/LVFalcao/data_engineering_with_aws/tree/main/Data%20Modeling)
  - Cloud Data Warehouses
  - Spark and Data Lakes
  - Automate Data Pipelines
