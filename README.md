@@ -11,6 +11,6 @@ The repository will have one folder per module:
 
 and each folder will contain more folders with with the following structure
    - Exercises
-   - Project<number> - <name>
+   - Project_number_ - _name_
 
 
