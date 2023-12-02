@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f2e196ec-7fb2-43c0-b9a9-09abc20c6883" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Data Modeling/Exercises/L1_Demo_0_Creating_a_Table_with_Postgres.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data Modeling/Exercises/L1_Demo_1_Creating_a_Table_with_Postgres.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data Modeling/Exercises/L1_Demo_2_Creating_a_Table_with_Apache_Cassandra.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data Modeling/Exercises/L1_Exercise_1_Creating_a_Table_with_Postgres.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data Modeling/Exercises/L1_Exercise_2_Creating_a_Table_with_Apache_Cassandra.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data Modeling/Exercises/L1_Exercise_2_Solution_Creating_a_Table_with_Apache_Cassandra.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data Modeling/Exercises/l1-exercise-1-solution-creating-a-table-with-postgres.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data Modeling/Project 1 - Apache Cassandra/Project_1B_ Project_Template.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data Modeling/Project 1 - Apache Cassandra/event_datafile_new.csv" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2YzKzp5XWcRuLYeDECli0zR8BBZ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f2e196ec-7fb2-43c0-b9a9-09abc20c6883" name="Changes" comment="" />
+      <created>1701523233037</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1701523233037</updated>
+    </task>
+    <servers />
+  </component>
+</project>
