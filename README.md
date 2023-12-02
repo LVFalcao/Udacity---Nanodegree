@@ -1,7 +1,7 @@
 # Project 2: Sparkify 
 
 
-### Tabela de Conteúdo
+### Table of Contents
 - [Project Summary](#Project-Summary)
 - [Datasets](#Datasets)
 - [Database Schema](#Database-Schema)
