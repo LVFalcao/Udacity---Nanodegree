@@ -26,22 +26,24 @@ CustomerLanding_node1703882405489 = glueContext.create_dynamic_frame.from_option
 )
 
 # Script generated for node Privacy Filter
-PrivacyFilter_node1703882536879 = Filter.apply(
+PrivacyFilter_node1704023486134 = Filter.apply(
     frame=CustomerLanding_node1703882405489,
     f=lambda row: (not (row["sharewithresearchasofdate"] == 0)),
-    transformation_ctx="PrivacyFilter_node1703882536879",
+    transformation_ctx="PrivacyFilter_node1704023486134",
 )
 
 # Script generated for node Customer Trusted
-CustomerTrusted_node1703882702428 = glueContext.write_dynamic_frame.from_options(
-    frame=PrivacyFilter_node1703882536879,
+CustomerTrusted_node1703882702428 = glueContext.getSink(
+    path="s3://stedi-lake-house-lf/customer/trusted/",
     connection_type="s3",
-    format="json",
-    connection_options={
-        "path": "s3://stedi-lake-house-lf/customer/trusted/",
-        "partitionKeys": [],
-    },
+    updateBehavior="UPDATE_IN_DATABASE",
+    partitionKeys=[],
+    enableUpdateCatalog=True,
     transformation_ctx="CustomerTrusted_node1703882702428",
 )
-
+CustomerTrusted_node1703882702428.setCatalogInfo(
+    catalogDatabase="stedi3", catalogTableName="customer_trusted"
+)
+CustomerTrusted_node1703882702428.setFormat("json")
+CustomerTrusted_node1703882702428.writeFrame(PrivacyFilter_node1704023486134)
 job.commit()
