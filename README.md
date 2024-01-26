@@ -1,91 +1,79 @@
-# Project 3: STEDI Human Balance Analytics
+# Project 4 - Sparkify :: Data Warehouse on Airflow
 
 
 ### Table of Contents
 - [Project Summary](#Project-Summary)
-- [Datasets](#Datasets)
-- [Architecture and Developments](#Architecture-and-Developments)
+- [Repository](#Repository)
+- [DAG](#Dag)
+- [Operators](#Operators)
 
 
 
 
 ### Project Summary
-The STEDI Team has been hard at work developing a hardware STEDI Step Trainer that:
+A music streaming company, Sparkify, has decided that it is time to introduce more automation and monitoring to their data warehouse ETL pipelines and come to the conclusion that the best tool to achieve this is Apache Airflow.
 
-* trains the user to do a STEDI balance exercise;
-* and has sensors on the device that collect data to train a machine-learning algorithm to detect steps;
-* has a companion mobile app that collects customer data and interacts with the device sensors.
+The source data resides in S3 and needs to be processed in Sparkify's data warehouse in Amazon Redshift. The source datasets consist of JSON logs that tell about user activity in the application and JSON metadata about the songs the users listen to.
 
-Several customers have already received their Step Trainers, installed the mobile application, and begun using them together to test their balance. The Step Trainer is just a motion sensor that records the distance of the object detected. The app uses a mobile phone accelerometer to detect motion in the X, Y, and Z directions.
-
-The STEDI team wants to use the motion sensor data to train a machine learning model to detect steps accurately in real-time. Privacy will be a primary consideration in deciding what data can be used.
-
-As a data engineer on the STEDI Step Trainer team, we'll need to **extract the data** produced by the STEDI Step Trainer sensors and the mobile app, and **curate them into a data lakehouse solution** on AWS so that Data Scientists can train the learning model.
-
-During this project, three services from Amazon Web Services will be used:
-* [AWS S3](https://aws.amazon.com/pt/s3/)
-* [AWS Glue](https://aws.amazon.com/pt/glue/)
-* [AWS Athena](https://aws.amazon.com/pt/athena/)
-
-Regarding the sources used during the project, you can find them under [Datasets](#Datasets).
+As a data engineer on the Sparkify team, we'll need to **create the ETL pipeline** 
 
 
-### Datasets
-Three data sources were used, which are in public **repository on the Git Hub**, and the objects contained in both buckets are JSON files.
 
-Information about the *accelerometer*, *customer* and *step_trainer* from the [nd027-Data-Engineering-Data-Lakes-AWS-Exercises](https://github.com/udacity/nd027-Data-Engineering-Data-Lakes-AWS-Exercises/tree/main/project)
-  * Accelerometer data: `s3://stedi-lake-house-lf/accelerometer/` data from the mobile app.
-~~~~
-accelerometer-1691348231445.json
-accelerometer-1691348231495.json
-~~~~
-Example:
-~~~~
-{"user":"Santosh.Clayton@test.com","timestamp":1655564444103,"x":1.0,"y":-1.0,"z":-1.0}
-~~~~
+### Repository
 
-  * Customer data: `s3://stedi-lake-house-lf/customer/` from fulfillment and the STEDI website.
+How the repository is organized
 ~~~~
-customer-1691348231425.json
-~~~~
-Example:
-~~~~
-{"customerName": "Santosh Clayton", "email": "Santosh.Clayton@test.com", "phone": "8015551212", "birthDay": "1900-01-01", "serialNumber": "50f7b4f3-7af5-4b07-a421-7b902c8d2b7c", "registrationDate": 1655564376361, "lastUpdateDate": 1655564376361, "shareWithResearchAsOfDate": 1655564376361, "shareWithPublicAsOfDate": 1655564376361, "shareWithFriendsAsOfDate": 1655564376361}
-~~~~
-
-  * Step Trainer data:  `s3://stedi-lake-house-lf/step_trainer/` data from the motion sensor.
-~~~~
-step_trainer-1691348232038.json
-step_trainer-1691348232085.json
-~~~~
-Example:
-~~~~
-{"sensorReadingTime":1655564149444,"serialNumber":"454a7430-d4ff-47cf-8666-7428f8a9894d","distanceFromObject":236}
+dags/
+    create_tables.py
+    data_pipelines.py
+plugins/    
+    helpers/
+        ddl_sql_statements.py
+        dml_sql_statements.py
+    custom_operators/
+        __init__.py
+        data_quality.py
+        load_dimension.py
+        load_fact.py
+        stage_redshift.py
+.gitignore
+README.md 
 ~~~~
 
+
+
+### DAG
 ![img.png](img.png)
 
+The DAG was configurated according to the following guidelines:
+
+- The DAG does not have dependencies on past runs
+- On failure, the task are retried 3 times
+- Retries happen every 5 minutes
+- Catchup is turned off
+- Do not email on retry
 
 
-### Architecture and Developments
+### Operators
 
-<details><summary>Landing Zone</summary>
+<details><summary>Stage Operator</summary>
+The stage operator is expected to be able to load any JSON-formatted files from S3 to Amazon Redshift. The operator creates and runs a SQL COPY statement based on the parameters provided. The operator's parameters should specify where in S3 the file is loaded and what is the target table.
+
+The parameters should be used to distinguish between JSON files. Another important requirement of the stage operator is containing a templated field that allows it to load timestamped files from S3 based on the execution time and run backfills.
 Using the AWS glue Data Catalog, glue tables were created to access the data with AWS Athena:
-
-+ Accelerometer Landing - Copies the data of customers, who have agreed to share their data with the researchers, from the "landing" zone to the "trusted" zone.
-+ Customer Landing
-+ Step Trainer Landing
 </details>    
-<details><summary>Trusted Zone</summary>
-Using AWS Glue Jobs, various transformations were created on the raw data stored in the landing zone.These generated the following Python scripts:
 
-+ `accelerometer_landing_to_trusted.py` - Copy the data of customers, who have agreed to share their data with the researchers, from the "landing" zone to the "trusted" zone.
-+ `customer_landing_to_trusted.py` - Copy the data of the customers, who have agreed to share their data with the researchers, from the accelerometer in the "landing" zone, adding the data from customer_trusted and accelerometer_landing, to the "trust" zone.  
-+ `step_trainer_trusted.py` -  Copy the data of the customers, who have agreed to share their data with the researchers, from the Step Trainer of the "landing" zones to the "trust" zones. 
-</details>  
-<details><summary>Curated Zone</summary>
-Using AWS Glue Jobs, various transformations were created to make analysis. These generated the following Python scripts:
 
-+ `customer_trusted_to_curated.py` - Copy customer data from the "trusted" zones to the "curated" zones. 
-+ `machine_learning_curated.py` - Creates an aggregate table containing Step Trainer data and the associated accelerometer reading data by the same timestamp.
-</details>  
+<details><summary>Fact and Dimension Operators</summary>
+With dimension and fact operators, you can utilize the provided SQL helper class to run data transformations. Most of the logic is within the SQL transformations, and the operator is expected to take as input a SQL statement and target database on which to run the query against. You can also define a target table that will contain the results of the transformation.
+
+Dimension loads are often done with the truncate-insert pattern, where the target table is emptied before the load. Thus, you could also have a parameter that allows switching between insert modes when loading dimensions. Fact tables are usually so massive that they should only allow append type functionality.
+</details>
+
+
+<details><summary>Data Quality Operator</summary>
+The final operator to create is the data quality operator, which runs checks on the data itself. The operator's main functionality is to receive one or more SQL based test cases along with the expected results and execute the tests. For each test, the test result and expected result need to be checked, and if there is no match, the operator should raise an exception, and the task should retry and fail eventually.
+
+For example, one test could be a SQL statement that checks if a certain column contains NULL values by counting all the rows that have NULL in the column. We do not want to have any NULLs, so the expected result would be 0, and the test would compare the SQL statement's outcome to the expected result.
+</details>    
+
